@@ -3,10 +3,10 @@ package model;
 import java.util.Objects;
 
 public class Task {
-    protected String title;
-    protected String description;
-    protected   int id;
-    protected TaskStatus taskStatus;
+    private String title;
+    private String description;
+    private    int id;
+    private TaskStatus taskStatus;
 
 
     public Task(String title, String description,  TaskStatus taskStatus) {
@@ -51,9 +51,15 @@ public class Task {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
         Task otherTask = (Task) obj;
         return Objects.equals(title, otherTask.title) &&
                 Objects.equals(description, otherTask.description) &&

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    int counter = 0;
+    private int counter = 0;
 
-    public HashMap<Integer, Task> tasksHashMap = new HashMap<>();
-    public HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    public HashMap<Integer,SubTask> subTasksHashMap = new HashMap<>();
+    private HashMap<Integer, Task> tasksHashMap = new HashMap<>();
+    private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
+    private HashMap<Integer,SubTask> subTasksHashMap = new HashMap<>();
 
 
     public int increaseCounter() {

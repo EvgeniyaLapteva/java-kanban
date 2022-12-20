@@ -21,20 +21,26 @@ public class SubTask extends  Task {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
         SubTask otherTask = (SubTask) obj;
-        return Objects.equals(title, otherTask.title) &&
-                Objects.equals(description, otherTask.description) &&
-                (id == otherTask.id) &&
-                Objects.equals(taskStatus, otherTask.taskStatus) &&
+        return Objects.equals(getTitle(), otherTask.getTitle()) &&
+                Objects.equals(getDescription(), otherTask.getDescription()) &&
+                (getId() == otherTask.getId()) &&
+                Objects.equals(getTaskStatus(), otherTask.getTaskStatus()) &&
                 (epicId == otherTask.epicId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, id, taskStatus, epicId);
+        return Objects.hash(getTitle(), getDescription(), getId(), getTaskStatus(), epicId);
     }
 
     @Override
