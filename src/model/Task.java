@@ -8,7 +8,6 @@ public class Task {
     private    int id;
     private TaskStatus taskStatus;
 
-
     public Task(String title, String description,  TaskStatus taskStatus) {
         this.title = title;
         this.description = description;
@@ -47,8 +46,6 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
-
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -79,7 +76,5 @@ public class Task {
                         "\nid= '" + id + "'," +
                         "\ntaskStatus= '" + taskStatus + "'}";
     }
-
-
 
 }

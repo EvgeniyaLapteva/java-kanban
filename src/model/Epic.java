@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
 public class Epic extends Task {
 
     private ArrayList<Integer> subTaskIdList = new ArrayList<>();
@@ -52,5 +51,4 @@ public class Epic extends Task {
                 "\ntaskStatus= '" + getTaskStatus() + "'," +
                 "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
     }
-
 }

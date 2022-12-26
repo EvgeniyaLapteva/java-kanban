@@ -51,5 +51,4 @@ public class SubTask extends  Task {
                 "\ntaskStatus= '" + getTaskStatus() + "'," +
                 "\nepicID= '" + getEpicId() + "'}";
     }
-
 }
