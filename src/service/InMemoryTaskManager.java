@@ -150,9 +150,11 @@ public class InMemoryTaskManager implements  TaskManager{
     public void deleteTaskById(int taskId) {
         if (tasksHashMap.containsKey(taskId)) {
             tasksHashMap.remove(taskId);
+            historyManager.remove(taskId);
         } else {
             System.out.println("Отсутствует задача по выбранному идентификатору");
         }
+
     }
 
     @Override
@@ -160,8 +162,10 @@ public class InMemoryTaskManager implements  TaskManager{
         if (epicHashMap.containsKey(epicId)) {
             for (Integer subTaskId: epicHashMap.get(epicId).getSubTaskIdList()) {
                 subTasksHashMap.remove(subTaskId);
+                historyManager.remove(subTaskId);
             }
             epicHashMap.remove(epicId);
+            historyManager.remove(epicId);
         } else {
             System.out.println("Отсутствует эпик по выбранному идентификатору");
         }
@@ -174,6 +178,7 @@ public class InMemoryTaskManager implements  TaskManager{
             Epic epic = epicHashMap.get(subTask.getEpicId());
             epic.getSubTaskIdList().remove((Integer) subTask.getEpicId());
             subTasksHashMap.remove(subTaskId);
+            historyManager.remove(subTaskId);
         } else {
             System.out.println("Отсутствует задача по выбранному идентификатору");
         }
