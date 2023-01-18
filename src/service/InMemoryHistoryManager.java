@@ -1,4 +1,5 @@
 package service;
+
 import model.Task;
 import java.util.Map;
 import java.util.ArrayList;
@@ -26,14 +27,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         listOfViewedTasks.removeNode(listOfViewedTasks.getNodeByTaskId(id));
     }
 
-    static class CustomLinkedList {
+    private class CustomLinkedList {
         private final Map<Integer, Node> memoryMap = new HashMap<>();
 
         private Node head;
         private Node tail;
 
         public void linkLast(Task task) {
-            if (memoryMap.containsKey(task.getId())) {
+            if (memoryMap.put(task.getId(), memoryMap.get(task.getId())) != null) {
                 removeNode(memoryMap.get(task.getId()));
             }
             Node node = new Node(task, null, null);

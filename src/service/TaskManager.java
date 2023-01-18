@@ -32,6 +32,7 @@ public interface TaskManager {
     Task getTaskById(int taskId);
 
     Epic getEpicById(int epicId);
+
     SubTask getSubtaskById(int subTaskId);
 
     void updateTask(Task task, int taskId);
