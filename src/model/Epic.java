@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class Epic extends Task {
 
+    private TaskType epicType = TaskType.EPIC;
+
     private ArrayList<Integer> subTaskIdList = new ArrayList<>();
 
     public Epic(String title, String description, TaskStatus taskStatus) {
@@ -50,5 +52,9 @@ public class Epic extends Task {
                 "\nid= '" + getId() + "'," +
                 "\ntaskStatus= '" + getTaskStatus() + "'," +
                 "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
+    }
+
+    public TaskType getEpicType() {
+        return epicType;
     }
 }

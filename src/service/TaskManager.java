@@ -11,11 +11,11 @@ public interface TaskManager {
 
     int increaseCounter();
 
-    Task createTask(Task task);
+    void createTask(Task task);
 
-    Epic createEpic(Epic epic);
+    void createEpic(Epic epic);
 
-    SubTask createSubtask(SubTask subTask);
+    void createSubtask(SubTask subTask);
 
     ArrayList <Task> getAllTasks();
 

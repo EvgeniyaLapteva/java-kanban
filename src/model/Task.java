@@ -5,8 +5,9 @@ import java.util.Objects;
 public class Task {
     private String title;
     private String description;
-    private    int id;
+    private int id;
     private TaskStatus taskStatus;
+    private final TaskType taskType = TaskType.TASK; // тут или удалить?
 
     public Task(String title, String description,  TaskStatus taskStatus) {
         this.title = title;
@@ -72,9 +73,12 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" + "title= '" + title + "'," +
-                        "\ndescription= '" + description + "'," +
-                        "\nid= '" + id + "'," +
-                        "\ntaskStatus= '" + taskStatus + "'}";
+                "\ndescription= '" + description + "'," +
+                "\nid= '" + id + "'," +
+                "\ntaskStatus= '" + taskStatus + "'}";
     }
 
+    public TaskType getTaskType() {
+        return taskType;
+    }
 }

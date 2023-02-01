@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements  TaskManager{
-    private int counter = 0;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected int counter = 0;
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public int increaseCounter() {
@@ -22,23 +22,22 @@ public class InMemoryTaskManager implements  TaskManager{
     }
 
     @Override
-    public Task createTask(Task task) {
+    public void createTask(Task task) {
         int taskId = increaseCounter();
         task.setId(taskId);
         tasks.put(taskId, task);
-        return task;
+
     }
 
     @Override
-    public Epic createEpic(Epic epic) {
+    public void createEpic(Epic epic) {
         int epicId = increaseCounter();
         epic.setId(epicId);
         epics.put(epicId, epic);
-        return epic;
     }
 
     @Override
-    public SubTask createSubtask(SubTask subTask) {
+    public void createSubtask(SubTask subTask) {
         int subtaskId = increaseCounter();
         subTask.setId(subtaskId);
         Epic epic = epics.get(subTask.getEpicId());
@@ -50,7 +49,6 @@ public class InMemoryTaskManager implements  TaskManager{
             System.out.println("Эпик не существует, выберите верный эпик и повторите запись.");
             counter--;
         }
-        return subTask;
     }
 
     @Override
@@ -101,7 +99,11 @@ public class InMemoryTaskManager implements  TaskManager{
 
     @Override
     public  Epic getEpicById(int epicId) {
-        historyManager.add(epics.get(epicId));
+        if (epics.get(epicId) == null) {
+            System.out.println("Эпика с таким id не существует");
+        } else {
+            historyManager.add(epics.get(epicId));
+        }
         return epics.get(epicId);
     }
     @Override
