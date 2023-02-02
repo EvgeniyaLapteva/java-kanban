@@ -53,10 +53,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
     public void save() {
         try (FileWriter fileWriter = new FileWriter(fileForSave)) {
-            try (PrintWriter printWriter = new PrintWriter(fileForSave)) {
-            } catch (IOException exception) {
-                throw new ManagerSaveException();
-            }
             fileWriter.write("id,type,name,status,description,epic\n");
             for (Task task: tasks.values()) {
                 fileWriter.write(toString(task));
@@ -132,7 +128,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager loadedFromFile = new FileBackedTasksManager(file);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String line = bufferedReader.readLine();
+            String line;
+            bufferedReader.readLine();
             while (bufferedReader.ready()) {
                 line = bufferedReader.readLine();
                 if (!line.isEmpty()) {
