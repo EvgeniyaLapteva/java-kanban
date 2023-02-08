@@ -7,12 +7,13 @@ public class Task {
     private String description;
     private int id;
     private TaskStatus taskStatus;
-    private final TaskType taskType = TaskType.TASK; // тут или удалить?
+    protected TaskType taskType;
 
     public Task(String title, String description,  TaskStatus taskStatus) {
         this.title = title;
         this.description = description;
         this.taskStatus = taskStatus;
+        this.taskType = TaskType.TASK;
     }
 
     public String getTitle() {
@@ -80,5 +81,9 @@ public class Task {
 
     public TaskType getTaskType() {
         return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 }

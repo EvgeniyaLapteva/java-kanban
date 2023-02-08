@@ -52,11 +52,13 @@ public class Main {
         taskManager.getEpicById(3);
         taskManager.getHistory();
         System.out.println("----------");
-        taskManager.deleteTaskById(1);
+        taskManager.deleteAllTasks();
         taskManager.getHistory();
         System.out.println("----------");
-        taskManager.deleteEpicById(3);
+        taskManager.deleteAllSubTasks();
         taskManager.getHistory();
         System.out.println("----------");
+        taskManager.deleteAllEpics();
+        taskManager.getHistory();
     }
 }

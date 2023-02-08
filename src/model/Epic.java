@@ -5,12 +5,11 @@ import java.util.Objects;
 
 public class Epic extends Task {
 
-    private TaskType epicType = TaskType.EPIC;
-
     private ArrayList<Integer> subTaskIdList = new ArrayList<>();
 
     public Epic(String title, String description, TaskStatus taskStatus) {
         super(title, description, taskStatus);
+        this.taskType = TaskType.EPIC;
     }
 
     public ArrayList<Integer> getSubTaskIdList() {
@@ -54,7 +53,7 @@ public class Epic extends Task {
                 "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
     }
 
-    public TaskType getEpicType() {
-        return epicType;
+    public void setSubTaskIdList(ArrayList<Integer> subTaskIdList) {
+        this.subTaskIdList = subTaskIdList;
     }
 }

@@ -6,11 +6,10 @@ public class SubTask extends  Task {
 
     private int epicId;
 
-    private final TaskType subTaskType = TaskType.SUBTASK;
-
     public SubTask(String title, String description, TaskStatus taskStatus, int epicId) {
         super(title, description, taskStatus);
         this.epicId = epicId;
+        this.taskType = TaskType.SUBTASK;
     }
 
     public int getEpicId() {
@@ -50,11 +49,9 @@ public class SubTask extends  Task {
                 "\nepicID= '" + getEpicId() + "'}";
     }
 
-    public TaskType getSubTaskType() {
-        return subTaskType;
-    }
-
     public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
+
+
 }
