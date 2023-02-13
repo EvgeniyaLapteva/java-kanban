@@ -284,7 +284,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         super.updateEpicStatus(epic);
     }
 
+    @Override
+    public ArrayList<Task> getAllTasks() {
+        ArrayList<Task> listOfTasks = new ArrayList<>(tasks.values());
+        for (Task task: listOfTasks) {
+            historyManager.add(task);
+        }
+        save();
+        return  listOfTasks;
+    }
 
+    @Override
+    public ArrayList<Epic> getAllEpics() {
+        ArrayList<Epic> listOfEpics = new ArrayList<>(epics.values());
+        for (Epic epic: listOfEpics) {
+            historyManager.add(epic);
+        }
+        save();
+        return listOfEpics;
+    }
 
-
+    @Override
+    public ArrayList<SubTask> getAllSubtasks() {
+        ArrayList<SubTask> listOfSubtasks = new ArrayList<>(subTasks.values());
+        for (SubTask subTask: listOfSubtasks) {
+            historyManager.add(subTask);
+        }
+        save();
+        return listOfSubtasks;
+    }
 }
