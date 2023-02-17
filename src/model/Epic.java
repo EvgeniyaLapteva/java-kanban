@@ -1,14 +1,21 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Epic extends Task {
 
     private ArrayList<Integer> subTaskIdList = new ArrayList<>();
+    private ArrayList<SubTask> subTasksOfEpic = new ArrayList<>();
 
-    public Epic(String title, String description, TaskStatus taskStatus) {
-        super(title, description, taskStatus);
+    private LocalDateTime endTime;
+
+    public Epic(String title, String description) {
+        super(title, description);
         this.taskType = TaskType.EPIC;
     }
 
@@ -18,6 +25,10 @@ public class Epic extends Task {
 
     public void setSubTaskIdList(int subTaskId) {
         subTaskIdList.add(subTaskId);
+    }
+
+    public void setSubTasksOfEpic(SubTask subTask) {
+        subTasksOfEpic.add(subTask);
     }
 
     @Override
@@ -36,6 +47,10 @@ public class Epic extends Task {
                 Objects.equals(getDescription(), epic.getDescription()) &&
                 (getId() == epic.getId()) &&
                 Objects.equals(getTaskStatus(), epic.getTaskStatus()) &&
+                Objects.equals(getStartTime(), epic.getStartTime()) &&
+                Objects.equals(getDuration(), epic.getDuration()) &&
+                Objects.equals(getEndTime(), epic.getEndTime()) &&
+                Objects.equals(taskType, epic.taskType) &&
                 Objects.equals(subTaskIdList, epic.subTaskIdList);
     }
 
@@ -53,7 +68,49 @@ public class Epic extends Task {
                 "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
     }
 
-    public void setSubTaskIdList(ArrayList<Integer> subTaskIdList) {
-        this.subTaskIdList = subTaskIdList;
+    public void setEpicStartTime(Epic epic) {
+        if (subTasksOfEpic.size() == 0) {
+            epic.setStartTime(null);
+        }
+        Stream.of(subTasksOfEpic)
+                .flatMap(Collection::stream)
+                .filter(subTask -> subTask.getStartTime() != null)
+                .map(Task::getStartTime)
+                .min(LocalDateTime::compareTo)
+                .ifPresent(epic::setStartTime);
+    }
+
+    public void setDurationTime(Epic epic) {
+        if (subTasksOfEpic.size() == 0) {
+            epic.setEndTime(null);
+        }
+        long durationTime = Stream.of(subTasksOfEpic)
+                .flatMap(Collection::stream)
+                .filter(subTask -> subTask.getDuration() != null)
+                .map(Task::getDuration)
+                .mapToLong(Duration::toMinutes)
+                .sum();
+        epic.setDuration(Duration.ofMinutes(durationTime));
+    }
+
+    public void setEndTimeForEpic(Epic epic) {
+        if (subTasksOfEpic.size() == 0) {
+            epic.setEndTime(null);
+        }
+        Stream.of(subTasksOfEpic)
+                .flatMap(Collection::stream)
+                .filter(subTask -> subTask.getEndTime() != null)
+                .map(Task::getEndTime)
+                .max(LocalDateTime::compareTo)
+                .ifPresent(epic::setEndTime);
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 }

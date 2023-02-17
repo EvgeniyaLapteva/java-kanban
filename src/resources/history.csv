@@ -1,9 +1,11 @@
-id,type,name,status,description,epic
-1,TASK,Выполнить 6 ТЗ,IN_PROGRESS,Разобраться с методами
-2,TASK,Забрать детей,NEW,Школа и садик
-3,EPIC,Сходить за покупками,NEW,По пути в школу
-4,EPIC,Съездить к бабушке,NEW,Живет далеко
-5,SUBTASK,Зайти за курицей,NEW,Куриный у дома,3
-6,SUBTASK,Промтовары,NEW,Магнит у дома,3
+id,type,name,status,description,startTime,Duration,epic
+1,TASK,Выполнить 6 ТЗ,IN_PROGRESS,Разобраться с методами,null,null
+2,TASK,Забрать детей,NEW,Школа и садик,null,null
+7,TASK,taskWithTime,NEW,new,25.02.2023 18:00,PT1H
+3,EPIC,Сходить за покупками,NEW,По пути в школу,null,PT0S
+4,EPIC,Съездить к бабушке,NEW,Живет далеко,null,PT0S
+5,SUBTASK,Зайти за курицей,NEW,Куриный у дома,null,null,3
+6,SUBTASK,Промтовары,NEW,Магнит у дома,null,null,3
+8,SUBTASK,title,NEW,withTime,15.03.2023 08:00,PT30M,3
 
-2,5,3,
+1,2,7,5,6,8,3,4,

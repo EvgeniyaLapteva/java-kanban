@@ -4,9 +4,12 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 import model.TaskStatus;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import service.exception.TimeIntersectionException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InMemoryTaskManager implements  TaskManager{
     protected int counter = 0;
@@ -14,6 +17,18 @@ public class InMemoryTaskManager implements  TaskManager{
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
+
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((task1, task2) -> {
+        if (task1.getStartTime() == null && task2.getStartTime() == null) {
+            return 1;
+        } else if (task1.getStartTime() == null && task2.getStartTime() != null) {
+            return 1;
+        } else if (task1.getStartTime() != null && task2.getStartTime() == null) {
+            return -1;
+        } else {
+            return task1.getStartTime().compareTo(task2.getStartTime());
+        }
+    });
 
     @Override
     public int increaseCounter() {
@@ -23,10 +38,15 @@ public class InMemoryTaskManager implements  TaskManager{
 
     @Override
     public void createTask(Task task) {
-        int taskId = increaseCounter();
-        task.setId(taskId);
-        tasks.put(taskId, task);
-
+        if (!checkIntersections(task)) {
+            int taskId = increaseCounter();
+            task.setId(taskId);
+            tasks.put(taskId, task);
+            getPrioritizedTasks();
+        } else {
+            throw new TimeIntersectionException("Невозможно создать задачу с выбранным периодом выполнения - " +
+                    "пересечение по времени с уже существующей задачей/подзадачей");
+        }
     }
 
     @Override
@@ -34,20 +54,28 @@ public class InMemoryTaskManager implements  TaskManager{
         int epicId = increaseCounter();
         epic.setId(epicId);
         epics.put(epicId, epic);
+        updateEpic(epic, epicId);
     }
 
     @Override
     public void createSubtask(SubTask subTask) {
-        int subtaskId = increaseCounter();
-        subTask.setId(subtaskId);
-        Epic epic = epics.get(subTask.getEpicId());
-        if (epic != null) {
-            subTasks.put(subtaskId,subTask);
-            epic.setSubTaskIdList(subtaskId);
-            updateEpicStatus(epic);
+        if (!checkIntersections(subTask)) {
+            int subtaskId = increaseCounter();
+            Epic epic = epics.get(subTask.getEpicId());
+            if (epic != null) {
+                subTask.setId(subtaskId);
+                subTasks.put(subtaskId, subTask);
+                epic.setSubTaskIdList(subtaskId);
+                epic.setSubTasksOfEpic(subTask);
+                updateEpicStatus(epic);
+                getPrioritizedTasks();
+            } else {
+                System.out.println("Эпик не существует, выберите верный эпик и повторите запись.");
+                counter--;
+            }
         } else {
-            System.out.println("Эпик не существует, выберите верный эпик и повторите запись.");
-            counter--;
+            throw new TimeIntersectionException("Невозможно создать задачу с выбранным периодом выполнения - " +
+                    "пересечение по времени с уже существующей задачей/подзадачей");
         }
     }
 
@@ -114,23 +142,33 @@ public class InMemoryTaskManager implements  TaskManager{
 
     @Override
     public Task getTaskById(int taskId) {
-        historyManager.add(tasks.get(taskId));
-        return tasks.get(taskId);
+        if (tasks.get(taskId) != null) {
+            historyManager.add(tasks.get(taskId));
+            return tasks.get(taskId);
+        } else {
+            throw new IllegalArgumentException("Отсутствует задача по выбранному идентификатору");
+        }
     }
 
     @Override
     public  Epic getEpicById(int epicId) {
-        if (epics.get(epicId) == null) {
-            System.out.println("Эпика с таким id не существует");
-        } else {
+        if (epics.get(epicId) != null) {
             historyManager.add(epics.get(epicId));
+            return epics.get(epicId);
+        } else {
+            throw new IllegalArgumentException("Отсутствует эпик по выбранному идентификатору");
         }
-        return epics.get(epicId);
+
     }
+
     @Override
     public  SubTask getSubtaskById(int subTaskId) {
-        historyManager.add(subTasks.get(subTaskId));
-        return subTasks.get(subTaskId);
+        if (subTasks.get(subTaskId) != null) {
+            historyManager.add(subTasks.get(subTaskId));
+            return subTasks.get(subTaskId);
+        } else {
+            throw new IllegalArgumentException("Отсутствует подзадача по выбранному идентификатору");
+        }
     }
 
     @Override
@@ -139,7 +177,7 @@ public class InMemoryTaskManager implements  TaskManager{
             task.setId(taskId);
             tasks.put(taskId, task);
         } else {
-            System.out.println("Отсутствует задача по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует задача по выбранному идентификатору");
         }
     }
 
@@ -153,7 +191,7 @@ public class InMemoryTaskManager implements  TaskManager{
             epics.put(epicId, epic);
             updateEpicStatus(epic);
         } else {
-            System.out.println("Отсутствует эпик по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует эпик по выбранному идентификатору");
         }
     }
 
@@ -165,7 +203,7 @@ public class InMemoryTaskManager implements  TaskManager{
             Epic epic = epics.get(subTask.getEpicId());
             updateEpicStatus(epic);
         } else {
-            System.out.println("Отсутствует задача по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует подзадача по выбранному идентификатору");
         }
     }
 
@@ -175,9 +213,8 @@ public class InMemoryTaskManager implements  TaskManager{
             tasks.remove(taskId);
             historyManager.remove(taskId);
         } else {
-            System.out.println("Отсутствует задача по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует задача по выбранному идентификатору");
         }
-
     }
 
     @Override
@@ -190,7 +227,7 @@ public class InMemoryTaskManager implements  TaskManager{
             epics.remove(epicId);
             historyManager.remove(epicId);
         } else {
-            System.out.println("Отсутствует эпик по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует эпик по выбранному идентификатору");
         }
     }
 
@@ -203,7 +240,7 @@ public class InMemoryTaskManager implements  TaskManager{
             subTasks.remove(subTaskId);
             historyManager.remove(subTaskId);
         } else {
-            System.out.println("Отсутствует задача по выбранному идентификатору");
+            throw new IllegalArgumentException("Отсутствует подзадача по выбранному идентификатору");
         }
     }
 
@@ -217,7 +254,7 @@ public class InMemoryTaskManager implements  TaskManager{
             }
             return subTasks;
         } else {
-            return new ArrayList<>();
+            throw new IllegalArgumentException("Отсутствует эпик по выбранному идентификатору");
         }
     }
 
@@ -253,6 +290,9 @@ public class InMemoryTaskManager implements  TaskManager{
                     epic.setTaskStatus(TaskStatus.IN_PROGRESS);
                 }
             }
+            epic.setEpicStartTime(epic);
+            epic.setDurationTime(epic);
+            epic.setEndTimeForEpic(epic);
         } else {
             System.out.println("Укажите уже созданный эпик");
         }
@@ -261,5 +301,62 @@ public class InMemoryTaskManager implements  TaskManager{
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public int getCounter() {
+        return counter;
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        Stream.of(tasks)
+                .map(HashMap::values)
+                .flatMap(Collection::stream)
+                .forEach(prioritizedTasks::add);
+
+        Stream.of(subTasks)
+                .map(HashMap::values)
+                .flatMap(Collection::stream)
+                .forEach(prioritizedTasks::add);
+        return prioritizedTasks;
+    }
+
+    @Override
+    public boolean checkIntersections(Task task) {
+        boolean intersection = false;
+        if (!prioritizedTasks.isEmpty()) {
+            for (Task takInSet: prioritizedTasks) {
+                if (takInSet.getStartTime() != null && takInSet.getEndTime() !=null) {
+                    if (task.getStartTime().isAfter(takInSet.getEndTime()) ||
+                        task.getEndTime().isBefore(takInSet.getStartTime())) {
+                        intersection = false;
+                    } else {
+                        intersection = true;
+                    }
+                }
+            }
+        }
+        return intersection;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof InMemoryTaskManager)) {
+            return false;
+        }
+        InMemoryTaskManager otherManager = (InMemoryTaskManager) obj;
+        return Objects.equals(tasks, otherManager.tasks) &&
+                Objects.equals(epics, otherManager.epics) &&
+                Objects.equals(subTasks, otherManager.subTasks) &&
+                Objects.equals(historyManager, otherManager.historyManager) &&
+                Objects.equals(prioritizedTasks, otherManager.prioritizedTasks) &&
+                (counter == otherManager.counter);
     }
 }

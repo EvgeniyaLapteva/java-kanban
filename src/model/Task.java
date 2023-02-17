@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,12 +10,28 @@ public class Task {
     private int id;
     private TaskStatus taskStatus;
     protected TaskType taskType;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String title, String description,  TaskStatus taskStatus) {
         this.title = title;
         this.description = description;
         this.taskStatus = taskStatus;
         this.taskType = TaskType.TASK;
+    }
+
+    public Task(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
+    public Task(String title, String description, TaskStatus taskStatus, Duration duration, LocalDateTime startTime) {
+        this.title = title;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.taskType = TaskType.TASK;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getTitle() {
@@ -62,6 +80,9 @@ public class Task {
         Task otherTask = (Task) obj;
         return Objects.equals(title, otherTask.title) &&
                 Objects.equals(description, otherTask.description) &&
+                Objects.equals(startTime, otherTask.startTime) &&
+                Objects.equals(duration, otherTask.duration) &&
+                Objects.equals(taskType, otherTask.taskType) &&
                 (id == otherTask.id) &&
                 Objects.equals(taskStatus, otherTask.taskStatus);
     }
@@ -85,5 +106,29 @@ public class Task {
 
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(duration);
+        } else {
+            return null;
+        }
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }
