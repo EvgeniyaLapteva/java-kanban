@@ -56,6 +56,8 @@ public interface TaskManager {
 
     int getCounter();
 
+    void setPrioritizedTasks(Task task);
+
     TreeSet<Task> getPrioritizedTasks();
 
     boolean checkIntersections(Task task);

@@ -36,13 +36,15 @@ public class Main {
                 LocalDateTime.of(2023, 3, 8, 10, 0));
         Task task14 = new Task("for time", "check", TaskStatus.NEW, Duration.ofMinutes(180),
                 LocalDateTime.of(2023, 2, 23, 10, 0));
-        Task task4 = new Task("test", "intersection", TaskStatus.NEW, Duration.ofMinutes(15),
+        Task task4 = new Task("", "intersection", TaskStatus.NEW, Duration.ofMinutes(15),
                 LocalDateTime.of(2023, 2, 23, 10, 10));
+        Task task6 = new Task("1", "1", TaskStatus.NEW);
+        taskManager.createTask(task6);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
         taskManager.createTask(task5);
         taskManager.createTask(task14);
-        System.out.println(taskManager.getPrioritizedTasks());
+
         System.out.println(epic.getStartTime());
         System.out.println(epic1.getStartTime());
         System.out.println(epic.getDuration());
@@ -50,7 +52,7 @@ public class Main {
         System.out.println(epic.getEndTime());
         System.out.println(epic1.getEndTime()); //null
         taskManager.createTask(task4);
-
-
+        System.out.println(taskManager.getPrioritizedTasks());
+        
     }
 }

@@ -6,10 +6,7 @@ import model.Task;
 import model.TaskStatus;
 import service.exception.TimeIntersectionException;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class InMemoryTaskManager implements  TaskManager{
     protected int counter = 0;
@@ -17,9 +14,10 @@ public class InMemoryTaskManager implements  TaskManager{
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
-
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((task1, task2) -> {
-        if (task1.getStartTime() == null && task2.getStartTime() == null) {
+        if (task1.equals(task2)) {
+            return 0;
+        } else if (task1.getStartTime() == null && task2.getStartTime() == null) {
             return 1;
         } else if (task1.getStartTime() == null && task2.getStartTime() != null) {
             return 1;
@@ -42,7 +40,7 @@ public class InMemoryTaskManager implements  TaskManager{
             int taskId = increaseCounter();
             task.setId(taskId);
             tasks.put(taskId, task);
-            getPrioritizedTasks();
+            setPrioritizedTasks(task);
         } else {
             throw new TimeIntersectionException("Невозможно создать задачу с выбранным периодом выполнения - " +
                     "пересечение по времени с уже существующей задачей/подзадачей");
@@ -68,7 +66,7 @@ public class InMemoryTaskManager implements  TaskManager{
                 epic.setSubTaskIdList(subtaskId);
                 epic.setSubTasksOfEpic(subTask);
                 updateEpicStatus(epic);
-                getPrioritizedTasks();
+                setPrioritizedTasks(subTask);
             } else {
                 System.out.println("Эпик не существует, выберите верный эпик и повторите запись.");
                 counter--;
@@ -176,6 +174,7 @@ public class InMemoryTaskManager implements  TaskManager{
         if (tasks.containsKey(taskId)) {
             task.setId(taskId);
             tasks.put(taskId, task);
+            setPrioritizedTasks(task);
         } else {
             throw new IllegalArgumentException("Отсутствует задача по выбранному идентификатору");
         }
@@ -202,6 +201,7 @@ public class InMemoryTaskManager implements  TaskManager{
             subTasks.put(subTaskID, subTask);
             Epic epic = epics.get(subTask.getEpicId());
             updateEpicStatus(epic);
+            setPrioritizedTasks(subTask);
         } else {
             throw new IllegalArgumentException("Отсутствует подзадача по выбранному идентификатору");
         }
@@ -309,17 +309,16 @@ public class InMemoryTaskManager implements  TaskManager{
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        Stream.of(tasks)
-                .map(HashMap::values)
-                .flatMap(Collection::stream)
-                .forEach(prioritizedTasks::add);
+    public void setPrioritizedTasks(Task task) {
+        if (task.getClass().equals(Task.class)) {
+            prioritizedTasks.addAll(tasks.values());
+        } else if (task.getClass().equals(SubTask.class)) {
+            prioritizedTasks.addAll(subTasks.values());
+        }
+    }
 
-        Stream.of(subTasks)
-                .map(HashMap::values)
-                .flatMap(Collection::stream)
-                .forEach(prioritizedTasks::add);
-        return prioritizedTasks;
+    public TreeSet<Task> getPrioritizedTasks() {
+        return this.prioritizedTasks;
     }
 
     @Override
@@ -340,23 +339,4 @@ public class InMemoryTaskManager implements  TaskManager{
         return intersection;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof InMemoryTaskManager)) {
-            return false;
-        }
-        InMemoryTaskManager otherManager = (InMemoryTaskManager) obj;
-        return Objects.equals(tasks, otherManager.tasks) &&
-                Objects.equals(epics, otherManager.epics) &&
-                Objects.equals(subTasks, otherManager.subTasks) &&
-                Objects.equals(historyManager, otherManager.historyManager) &&
-                Objects.equals(prioritizedTasks, otherManager.prioritizedTasks) &&
-                (counter == otherManager.counter);
-    }
 }

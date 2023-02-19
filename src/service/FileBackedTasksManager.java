@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
 
@@ -76,7 +75,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 fileWriter.write(toString(subTask));
             }
             fileWriter.write("\n" + historyToString(historyManager));
-
         } catch (IOException exception) {
             throw new ManagerSaveException("Не удается выполнить сохранение в файл");
         }
@@ -104,7 +102,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     public Task fromString(String value) {
-        if (!value.equals("")) {
             String[] items = value.split(",");
             Task task;
             LocalDateTime startTime = items[5].equals("null") ? null : LocalDateTime.parse(items[5], formatter);
@@ -121,9 +118,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             task.setStartTime(startTime);
             task.setDuration(duration);
             return task;
-        } else {
-            throw new ManagerSaveException("Нет сохраненных данных");
-        }
     }
 
         public TaskStatus checkStatus(String[] items) {
@@ -359,24 +353,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         save();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof FileBackedTasksManager)) {
-            return false;
-        }
-        FileBackedTasksManager otherManager = (FileBackedTasksManager) obj;
-        return Objects.equals(tasks, otherManager.tasks) &&
-                Objects.equals(epics, otherManager.epics) &&
-                Objects.equals(subTasks, otherManager.subTasks) &&
-                Objects.equals(historyManager, otherManager.historyManager) &&
-                Objects.equals(prioritizedTasks, otherManager.prioritizedTasks) &&
-                (counter == otherManager.counter) &&
-                Objects.equals(fileForSave, otherManager.fileForSave);
-    }
 }

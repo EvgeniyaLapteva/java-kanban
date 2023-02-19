@@ -1,12 +1,8 @@
-package test;
+package service;
 
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.HistoryManager;
-import service.InMemoryTaskManager;
-import service.TaskManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class HistoryManagerTest<T extends HistoryManager> {
 
-    T historyManager;
+    protected T historyManager;
 
     public void setHistoryManager(T historyManager) {
         this.historyManager = historyManager;
@@ -83,7 +79,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void ShouldRemoveFromHistoryByMiddle() {
+    void shouldRemoveFromHistoryByMiddle() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         task.setId(1);
         Task task2 = new Task("task2", "description2", TaskStatus.NEW);
