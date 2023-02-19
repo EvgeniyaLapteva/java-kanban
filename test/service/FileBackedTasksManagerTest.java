@@ -72,7 +72,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
     @Test
     public void shouldThrowExceptionWhenFileDoesNotExist() {
-        file = new File("с/test.е");
+        file = new File("с/forTest.е");
         setTaskManager(new FileBackedTasksManager(file));
         Executable executable = () -> taskManager.save();
         ManagerSaveException exception = assertThrows(ManagerSaveException.class, executable);
