@@ -1,6 +1,5 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -10,7 +9,7 @@ public class Task {
     private int id;
     private TaskStatus taskStatus;
     protected TaskType taskType;
-    private Duration duration;
+    private long duration;
     private LocalDateTime startTime;
 
     public Task(String title, String description,  TaskStatus taskStatus) {
@@ -25,7 +24,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(String title, String description, TaskStatus taskStatus, Duration duration, LocalDateTime startTime) {
+    public Task(String title, String description, TaskStatus taskStatus, long duration, LocalDateTime startTime) {
         this.title = title;
         this.description = description;
         this.taskStatus = taskStatus;
@@ -83,6 +82,7 @@ public class Task {
                 Objects.equals(startTime, otherTask.startTime) &&
                 Objects.equals(duration, otherTask.duration) &&
                 Objects.equals(taskType, otherTask.taskType) &&
+                Objects.equals(getEndTime(), otherTask.getEndTime()) &&
                 (id == otherTask.id) &&
                 Objects.equals(taskStatus, otherTask.taskStatus);
     }
@@ -97,6 +97,8 @@ public class Task {
         return "Task{" + "title= '" + title + "'," +
                 "\ndescription= '" + description + "'," +
                 "\nid= '" + id + "'," +
+                "\nstartTime= " + (getStartTime() == null ? "null" : getStartTime()) + "," +
+                "\nendTime= " + (getEndTime() == null ? "null" : getEndTime()) + "," +
                 "\ntaskStatus= '" + taskStatus + "'}";
     }
 
@@ -109,18 +111,18 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        if (startTime != null && duration != null) {
-            return startTime.plus(duration);
+        if (startTime != null) {
+            return startTime.plusMinutes(duration);
         } else {
             return null;
         }
     }
 
-    public Duration getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 

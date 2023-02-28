@@ -3,7 +3,6 @@ package service;
 import model.*;
 import service.exception.ManagerSaveException;
 import java.io.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,9 +30,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         Epic secondEpic = new Epic("Съездить к бабушке", "Живет далеко");
         SubTask firstSubTask = new SubTask("Зайти за курицей", "Куриный у дома", TaskStatus.NEW, 3);
         SubTask secondSubTask = new SubTask("Промтовары", "Магнит у дома", TaskStatus.NEW, 3);
-        Task taskTime = new Task("taskWithTime", "new", TaskStatus.NEW, Duration.ofMinutes(60),
+        Task taskTime = new Task("taskWithTime", "new", TaskStatus.NEW, 60,
                 LocalDateTime.of(2023, 2, 25, 18, 0));
-        SubTask subTask = new SubTask("title", "withTime", TaskStatus.NEW, Duration.ofMinutes(30),
+        SubTask subTask = new SubTask("title", "withTime", TaskStatus.NEW, 30,
                 LocalDateTime.of(2023, 3, 15, 8, 0), 3);
 
         taskManager.createTask(firstTask);
@@ -60,6 +59,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         System.out.println(loadedTaskManager.getAllEpics());
         System.out.println("_______________");
         System.out.println(loadedTaskManager.getHistory());
+        System.out.println(loadedTaskManager.getTaskById(1).getStartTime());
 
     }
     public void save() {
@@ -81,31 +81,32 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     public String toString(Task task) {
-        return String.format("%d,%S,%s,%S,%s,%s,%s\n", task.getId(),task.getTaskType().toString(), task.getTitle(),
+        return String.format("%d,%S,%s,%S,%s,%s,%d\n", task.getId(),task.getTaskType().toString(), task.getTitle(),
                 task.getTaskStatus().toString(), task.getDescription(), (task.getStartTime() == null ? "null" :
-                        task.getStartTime().format(formatter)), (task.getDuration() == null) ? "null" :
-                        task.getDuration().toString());
+                        task.getStartTime().format(formatter)), (task.getDuration() == 0) ? 0 :
+                        task.getDuration());
     }
 
     public String toString(Epic epic) {
-        return String.format("%d,%S,%s,%S,%s,%s,%s\n", epic.getId(), epic.getTaskType().toString(), epic.getTitle(),
+        return String.format("%d,%S,%s,%S,%s,%s,%d\n", epic.getId(), epic.getTaskType().toString(), epic.getTitle(),
                 epic.getTaskStatus().toString(), epic.getDescription(), (epic.getStartTime() == null ? "null" :
-                        epic.getStartTime().format(formatter)), (epic.getDuration() == null ? "null" :
-                        epic.getDuration().toString()));
+                        epic.getStartTime().format(formatter)), (epic.getDuration() == 0) ? 0 :
+                        epic.getDuration());
     }
 
     public  String toString(SubTask subTask) {
-        return String.format("%d,%S,%s,%S,%s,%s,%s,%d\n", subTask.getId(), subTask.getTaskType().toString(), subTask.getTitle(),
-                subTask.getTaskStatus().toString(), subTask.getDescription(), (subTask.getStartTime() == null ? "null" :
-                        subTask.getStartTime().format(formatter)), (subTask.getDuration() == null ? "null" :
-                        subTask.getDuration().toString()), subTask.getEpicId());
+        return String.format("%d,%S,%s,%S,%s,%s,%d,%d\n", subTask.getId(), subTask.getTaskType().toString(),
+                subTask.getTitle(), subTask.getTaskStatus().toString(), subTask.getDescription(),
+                (subTask.getStartTime() == null ? "null" : subTask.getStartTime().format(formatter)),
+                (subTask.getDuration() == 0 ? 0 : subTask.getDuration()), subTask.getEpicId());
     }
 
     public Task fromString(String value) {
             String[] items = value.split(",");
             Task task;
             LocalDateTime startTime = items[5].equals("null") ? null : LocalDateTime.parse(items[5], formatter);
-            Duration duration = items[6].equals("null") ? null : Duration.parse(items[6]);
+//            Duration duration = items[6].equals("null") ? null : Duration.parse(items[6]);
+            long duration = Integer.parseInt(items[6]);
             if (items[1].equals("SUBTASK")) {
                 task = new SubTask(items[2], items[4], checkStatus(items), Integer.parseInt(items[7]));
             } else if (items[1].equals("EPIC")) {
@@ -353,4 +354,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         save();
     }
 
+    public void setFileForSave(File fileForSave) {
+        this.fileForSave = fileForSave;
+    }
+
+    public void setFormatter(DateTimeFormatter formatter) {
+        this.formatter = formatter;
+    }
 }

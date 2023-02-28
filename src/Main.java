@@ -28,22 +28,22 @@ public class Main {
         taskManager.createSubtask(subTask2);
         Epic epic1 =new Epic("Эпик 2", "Без подзадач");
         taskManager.createEpic(epic1);
-        Task task2 = new Task("title", "description", TaskStatus.NEW, Duration.ofMinutes(60),
+        Task task2 = new Task("title", "description", TaskStatus.NEW, 60,
                 LocalDateTime.of(2023, 2, 20, 8, 0));
-        Task task3 = new Task("title2,", "time", TaskStatus.NEW, Duration.ofMinutes(30),
+        Task task3 = new Task("title2,", "time", TaskStatus.NEW, 30,
                 LocalDateTime.of(2023, 3, 15, 14, 0));
-        Task task5 = new Task("subtask", "for time", TaskStatus.NEW, Duration.ofMinutes(25),
+        Task task5 = new Task("subtask", "for time", TaskStatus.NEW, 25,
                 LocalDateTime.of(2023, 3, 8, 10, 0));
-        Task task14 = new Task("for time", "check", TaskStatus.NEW, Duration.ofMinutes(180),
+        Task task14 = new Task("for time", "check", TaskStatus.NEW, 180,
                 LocalDateTime.of(2023, 2, 23, 10, 0));
-        Task task4 = new Task("", "intersection", TaskStatus.NEW, Duration.ofMinutes(15),
+        Task task4 = new Task("", "intersection", TaskStatus.NEW, 15,
                 LocalDateTime.of(2023, 2, 23, 10, 10));
         Task task6 = new Task("1", "1", TaskStatus.NEW);
         taskManager.createTask(task6);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
         taskManager.createTask(task5);
-        taskManager.createTask(task14);
+
 
         System.out.println(epic.getStartTime());
         System.out.println(epic1.getStartTime());
@@ -52,7 +52,7 @@ public class Main {
         System.out.println(epic.getEndTime());
         System.out.println(epic1.getEndTime()); //null
         taskManager.createTask(task4);
+        //taskManager.createTask(task14);
         System.out.println(taskManager.getPrioritizedTasks());
-        
     }
 }

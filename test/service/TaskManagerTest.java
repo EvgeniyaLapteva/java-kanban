@@ -562,12 +562,12 @@ public abstract class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void shouldPrioritizedTasks() {
-        Task task = new Task("title", "timeTest", TaskStatus.NEW, Duration.ofMinutes(60),
+        Task task = new Task("title", "timeTest", TaskStatus.NEW, 60,
                 LocalDateTime.of(2023, 2, 23, 10,0));
-        Task task1 = new Task("title2", "testTime", TaskStatus.NEW, Duration.ofMinutes(180),
+        Task task1 = new Task("title2", "testTime", TaskStatus.NEW, 180,
                 LocalDateTime.of(2023, 3, 30, 20,0));
         Epic epic = new Epic("epic", "");
-        SubTask subTask = new SubTask("subtask", "", TaskStatus.NEW, Duration.ofMinutes(15),
+        SubTask subTask = new SubTask("subtask", "", TaskStatus.NEW, 15,
                 LocalDateTime.of(2023, 5, 15, 8, 0), 3);
         taskManager.createTask(task);
         taskManager.createTask(task1);
@@ -579,7 +579,7 @@ public abstract class TaskManagerTest <T extends TaskManager> {
             if (t1.equals(t2)) {
                 return 0;
             } else if (t1.getStartTime() == null && t2.getStartTime() == null) {
-                return 1;
+                return Integer.compare(t1.getId(), t2.getId());
             } else if (t1.getStartTime() == null && t2.getStartTime() != null) {
                 return 1;
             } else if (t1.getStartTime() != null && t2.getStartTime() == null) {
@@ -599,9 +599,9 @@ public abstract class TaskManagerTest <T extends TaskManager> {
 
     @Test
     public void shouldCheckIntersectionAndThrowExceptionWhenCreateTask() {
-        Task task = new Task("for time", "check", TaskStatus.NEW, Duration.ofMinutes(180),
+        Task task = new Task("for time", "check", TaskStatus.NEW, 180,
                 LocalDateTime.of(2023, 2, 23, 10, 0));
-        Task task2 = new Task("", "intersection", TaskStatus.NEW, Duration.ofMinutes(15),
+        Task task2 = new Task("", "intersection", TaskStatus.NEW, 15,
                 LocalDateTime.of(2023, 2, 23, 10, 10));
         Executable executable = () -> {
             taskManager.createTask(task);
@@ -617,9 +617,9 @@ public abstract class TaskManagerTest <T extends TaskManager> {
     @Test
     public void shouldCheckIntersectionAndThrowExceptionWhenCreateSubtask() {
         taskManager.createEpic(new Epic("epic", "description"));
-        SubTask subTask = new SubTask("for time", "check", TaskStatus.NEW, Duration.ofMinutes(180),
+        SubTask subTask = new SubTask("for time", "check", TaskStatus.NEW, 180,
                 LocalDateTime.of(2023, 2, 23, 10, 0), 1);
-        SubTask subTask1 = new SubTask("", "intersection", TaskStatus.NEW, Duration.ofMinutes(15),
+        SubTask subTask1 = new SubTask("", "intersection", TaskStatus.NEW, 15,
                 LocalDateTime.of(2023, 2, 23, 10, 10), 1);
         Executable executable = () -> {
             taskManager.createSubtask(subTask);

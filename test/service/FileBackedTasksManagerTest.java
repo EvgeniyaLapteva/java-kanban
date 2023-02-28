@@ -75,6 +75,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         file = new File("с/forTest.е");
         setTaskManager(new FileBackedTasksManager(file));
         Executable executable = () -> taskManager.save();
+
         ManagerSaveException exception = assertThrows(ManagerSaveException.class, executable);
 
         assertEquals("Не удается выполнить сохранение в файл", exception.getMessage());

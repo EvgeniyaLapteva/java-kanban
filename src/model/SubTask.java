@@ -1,6 +1,5 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ public class SubTask extends  Task {
         this.taskType = TaskType.SUBTASK;
     }
 
-    public SubTask(String title, String description, TaskStatus taskStatus, Duration duration, LocalDateTime startTime,
+    public SubTask(String title, String description, TaskStatus taskStatus, long duration, LocalDateTime startTime,
                    int epicId) {
         super(title, description, taskStatus, duration, startTime);
         this.epicId = epicId;
@@ -56,11 +55,13 @@ public class SubTask extends  Task {
 
     @Override
     public String toString() {
-        return "SubTask{" + "title= '" + getTitle() + "'," +
-                "\ndescription= '" + getDescription() + "'," +
-                "\nid= '" + getId() + "'," +
-                "\ntaskStatus= '" + getTaskStatus() + "'," +
-                "\nepicID= '" + getEpicId() + "'}";
+    return "SubTask{" + "title= '" + getTitle() + "'," +
+            "\ndescription= '" + getDescription() + "'," +
+            "\nid= '" + getId() + "'," +
+            "\nstartTime= " + (getStartTime() == null ? "null" : getStartTime()) + "," +
+            "\nendTime= " + (getEndTime() == null ? "null" : getEndTime()) + "," +
+            "\ntaskStatus= '" + getTaskStatus() + "'," +
+            "\nepicID= '" + getEpicId() + "'}";
     }
 
     public void setEpicId(int epicId) {

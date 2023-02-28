@@ -1,6 +1,5 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,14 +8,16 @@ import java.util.stream.Stream;
 
 public class Epic extends Task {
 
-    private ArrayList<Integer> subTaskIdList = new ArrayList<>();
-    private ArrayList<SubTask> subTasksOfEpic = new ArrayList<>();
+    private final ArrayList<Integer> subTaskIdList;
+    private final ArrayList<SubTask> subTasksOfEpic;
 
     private LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
         this.taskType = TaskType.EPIC;
+        this.subTaskIdList = new ArrayList<>();
+        this.subTasksOfEpic = new ArrayList<>();
     }
 
     public ArrayList<Integer> getSubTaskIdList() {
@@ -62,47 +63,51 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" + "title= '" + getTitle() + "'," +
-                "\ndescription= '" + getDescription() + "'," +
-                "\nid= '" + getId() + "'," +
-                "\ntaskStatus= '" + getTaskStatus() + "'," +
-                "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
+            "\ndescription= '" + getDescription() + "'," +
+            "\nid= '" + getId() + "'," +
+            "\nstartTime= " + (getStartTime() == null ? "null" : getStartTime()) + "," +
+            "\nendTime= " + (getEndTime() == null ? "null" : getEndTime()) + "," +
+            "\ntaskStatus= '" + getTaskStatus() + "'," +
+            "\nsubTaskIdList= '" + getSubTaskIdList() + "'}";
     }
 
     public void setEpicStartTime(Epic epic) {
-        if (subTasksOfEpic.size() == 0) {
+        if (subTasksOfEpic.size() != 0) {
+            Stream.of(subTasksOfEpic)
+                    .flatMap(Collection::stream)
+                    .filter(subTask -> subTask.getStartTime() != null)
+                    .map(Task::getStartTime)
+                    .min(LocalDateTime::compareTo)
+                    .ifPresent(epic::setStartTime);
+        } else {
             epic.setStartTime(null);
         }
-        Stream.of(subTasksOfEpic)
-                .flatMap(Collection::stream)
-                .filter(subTask -> subTask.getStartTime() != null)
-                .map(Task::getStartTime)
-                .min(LocalDateTime::compareTo)
-                .ifPresent(epic::setStartTime);
     }
 
     public void setDurationTime(Epic epic) {
-        if (subTasksOfEpic.size() == 0) {
+        if (subTasksOfEpic.size() != 0) {
+            long duration = Stream.of(subTasksOfEpic)
+                    .flatMap(Collection::stream)
+                    .filter(subTask -> subTask.getDuration() != 0)
+                    .mapToLong(Task::getDuration)
+                    .sum();
+            epic.setDuration(duration);
+        } else {
             epic.setEndTime(null);
         }
-        long durationTime = Stream.of(subTasksOfEpic)
-                .flatMap(Collection::stream)
-                .filter(subTask -> subTask.getDuration() != null)
-                .map(Task::getDuration)
-                .mapToLong(Duration::toMinutes)
-                .sum();
-        epic.setDuration(Duration.ofMinutes(durationTime));
     }
 
     public void setEndTimeForEpic(Epic epic) {
-        if (subTasksOfEpic.size() == 0) {
+        if (subTasksOfEpic.size() != 0) {
+            Stream.of(subTasksOfEpic)
+                    .flatMap(Collection::stream)
+                    .filter(subTask -> subTask.getEndTime() != null)
+                    .map(Task::getEndTime)
+                    .max(LocalDateTime::compareTo)
+                    .ifPresent(epic::setEndTime);
+        } else {
             epic.setEndTime(null);
         }
-        Stream.of(subTasksOfEpic)
-                .flatMap(Collection::stream)
-                .filter(subTask -> subTask.getEndTime() != null)
-                .map(Task::getEndTime)
-                .max(LocalDateTime::compareTo)
-                .ifPresent(epic::setEndTime);
     }
 
     public void setEndTime(LocalDateTime endTime) {
