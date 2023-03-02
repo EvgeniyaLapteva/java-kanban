@@ -13,8 +13,8 @@ import static http.HttpTaskServer.sendText;
 
 public class HistoryHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    Gson gson = Managers.getGson();
+    private  final TaskManager taskManager;
+    private  final Gson gson = Managers.getGson();
 
     public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;

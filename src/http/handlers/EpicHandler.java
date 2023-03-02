@@ -17,13 +17,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class EpicHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    Gson gson = Managers.getGson();
+    private  final TaskManager taskManager;
+    private  final Gson gson = Managers.getGson();
 
     public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
-
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

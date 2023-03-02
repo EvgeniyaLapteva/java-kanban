@@ -45,33 +45,6 @@ class HttpTaskServerTest {
         server.stop();
     }
 
-//    @BeforeEach
-//    public void rebootServer() {
-//        HttpClient client = HttpClient.newHttpClient();
-//        URI uri = URI.create("http://localhost:8080/tasks/task");
-//        try {
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(uri)
-//                    .DELETE()
-//                    .build();
-//            client.send(request, HttpResponse.BodyHandlers.ofString());
-//            uri = URI.create("http://localhost:8080/tasks/epic");
-//            request = HttpRequest.newBuilder()
-//                    .uri(uri)
-//                    .DELETE()
-//                    .build();
-//            client.send(request, HttpResponse.BodyHandlers.ofString());
-//            uri = URI.create("http://localhost:8080/tasks/subtask");
-//            request = HttpRequest.newBuilder()
-//                    .uri(uri)
-//                    .DELETE()
-//                    .build();
-//            client.send(request, HttpResponse.BodyHandlers.ofString());
-//        } catch (IOException | InterruptedException exception) {
-//            System.out.println("Ошибка при перезагрузке сервера");
-//        }
-//    }
-
     @Test
     public void shouldGetTasks() {
         HttpClient client = HttpClient.newHttpClient();

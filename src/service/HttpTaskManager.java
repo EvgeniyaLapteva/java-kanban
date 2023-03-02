@@ -1,14 +1,13 @@
-package http;
+package service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import http.KVTaskClient;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import service.FileBackedTasksManager;
-import service.Managers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,8 +15,8 @@ import java.util.stream.Collectors;
 
 public class HttpTaskManager extends FileBackedTasksManager {
 
-    private KVTaskClient client;
-    private Gson gson = Managers.getGson();
+    private final KVTaskClient client;
+    private final Gson gson = Managers.getGson();
 
     public HttpTaskManager(URI uri) throws IOException, InterruptedException {
         client = new KVTaskClient(uri);

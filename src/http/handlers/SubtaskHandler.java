@@ -21,8 +21,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SubtaskHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    Gson gson = Managers.getGson();
+    private final TaskManager taskManager;
+    private final Gson gson = Managers.getGson();
 
     public SubtaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;

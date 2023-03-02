@@ -13,8 +13,8 @@ import static http.HttpTaskServer.sendText;
 
 public class PrioritizedHandler implements HttpHandler {
 
-    TaskManager taskManager;
-    Gson gson = Managers.getGson();
+    private final TaskManager taskManager;
+    private final Gson gson = Managers.getGson();
 
     public PrioritizedHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
