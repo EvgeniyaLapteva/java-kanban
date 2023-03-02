@@ -18,7 +18,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void addShouldAddTaskToHistory() {
+    public void addShouldAddTaskToHistory() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         historyManager.add(task);
         final List<Task> history = historyManager.getHistory();
@@ -27,7 +27,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void shouldNotAddDuplicateToHistory() {
+    public void shouldNotAddDuplicateToHistory() {
         Task task = new Task("task1", "test1", TaskStatus.NEW);
         historyManager.add(task);
         historyManager.add(task);
@@ -40,7 +40,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void shouldGetHistory() {
+    public void shouldGetHistory() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         task.setId(1);
         Task task2 = new Task("task2", "description2", TaskStatus.NEW);
@@ -57,7 +57,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void ShouldRemoveFromHistoryByStart() {
+    public void ShouldRemoveFromHistoryByStart() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         task.setId(1);
         Task task2 = new Task("task2", "description2", TaskStatus.NEW);
@@ -79,7 +79,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void shouldRemoveFromHistoryByMiddle() {
+    public void shouldRemoveFromHistoryByMiddle() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         task.setId(1);
         Task task2 = new Task("task2", "description2", TaskStatus.NEW);
@@ -102,7 +102,7 @@ public abstract class HistoryManagerTest<T extends HistoryManager> {
     }
 
     @Test
-    void shouldRemoveFromHistoryByEnd() {
+    public void shouldRemoveFromHistoryByEnd() {
         Task task = new Task("task", "description", TaskStatus.NEW);
         task.setId(1);
         Task task2 = new Task("task2", "description2", TaskStatus.NEW);

@@ -10,9 +10,6 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
- */
 public class KVServer {
 	public static final int PORT = 8078;
 	private final String apiToken;
@@ -44,7 +41,7 @@ public class KVServer {
 					return;
 				}
 				if (!data.containsKey(key)) {
-					System.out.println("Данные для key " + key + "отсутствуют.");
+					System.out.println("Данные для key " + key + " отсутствуют.");
 					h.sendResponseHeaders(404, 0);
 					return;
 				}
@@ -132,5 +129,10 @@ public class KVServer {
 		h.getResponseHeaders().add("Content-Type", "application/json");
 		h.sendResponseHeaders(200, resp.length);
 		h.getResponseBody().write(resp);
+	}
+
+	public void stop() {
+		System.out.println("Остановили сервер на порту " + PORT);
+		server.stop(0);
 	}
 }

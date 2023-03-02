@@ -91,6 +91,7 @@ public class EpicHandler implements HttpHandler {
             }
         } catch (Throwable e) {
             exchange.sendResponseHeaders(400, 0);
+            System.out.println("Произошла ошибка при запросе");
         } finally {
             exchange.close();
         }

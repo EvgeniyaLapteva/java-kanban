@@ -1,6 +1,5 @@
 package http;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import http.handlers.*;
@@ -15,15 +14,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    private static final TaskManager taskManager = Managers.getDefaultFileBackedManager();
+    //private static final TaskManager taskManager = Managers.getDefaultFileBackedManager();
+
     private static HttpServer server;
-    private static final Gson gson = Managers.getGson();
-//    File file = new File("src/resources/forTest.csv");
-//
-//    FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
     public void start() {
         try {
+            TaskManager taskManager = Managers.getDefaultHttpManager();
             server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
             System.out.println("Запускаем сервер на порту " + PORT);
             System.out.println("Открой в браузере http://localhost:" + PORT + "/");
@@ -33,7 +30,7 @@ public class HttpTaskServer {
             server.createContext("/tasks/history", new HistoryHandler(taskManager));
             server.createContext("/tasks", new PrioritizedHandler(taskManager));
             server.start();
-        } catch (IOException exception) {
+        } catch (IOException | InterruptedException exception) {
             System.out.println("При старте сервера произошла ошибка");
         }
     }

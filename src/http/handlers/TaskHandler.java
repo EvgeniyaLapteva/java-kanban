@@ -79,7 +79,7 @@ public class TaskHandler implements HttpHandler {
                         String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
                         if (id != -1) {
-                            taskManager.deleteEpicById(id);
+                            taskManager.deleteTaskById(id);
                         } else {
                             System.out.println("Получен некорректный id");
                             exchange.sendResponseHeaders(405,0);

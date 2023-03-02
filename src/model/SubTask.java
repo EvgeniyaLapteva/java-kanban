@@ -63,10 +63,4 @@ public class SubTask extends  Task {
             "\ntaskStatus= '" + getTaskStatus() + "'," +
             "\nepicID= '" + getEpicId() + "'}";
     }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
-
-
 }

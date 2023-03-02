@@ -8,13 +8,20 @@ import java.util.stream.Stream;
 
 public class Epic extends Task {
 
-    private final ArrayList<Integer> subTaskIdList;
-    private final ArrayList<SubTask> subTasksOfEpic;
+    private ArrayList<Integer> subTaskIdList;
+    private ArrayList<SubTask> subTasksOfEpic;
 
-    private LocalDateTime endTime;
+    private transient LocalDateTime endTime;
 
     public Epic(String title, String description) {
         super(title, description);
+        this.taskType = TaskType.EPIC;
+        this.subTaskIdList = new ArrayList<>();
+        this.subTasksOfEpic = new ArrayList<>();
+    }
+
+    public Epic(String title, String description, TaskStatus taskStatus, long duration, LocalDateTime startTime) {
+        super(title, description, taskStatus, duration, startTime);
         this.taskType = TaskType.EPIC;
         this.subTaskIdList = new ArrayList<>();
         this.subTasksOfEpic = new ArrayList<>();

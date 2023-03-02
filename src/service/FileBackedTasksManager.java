@@ -3,6 +3,7 @@ package service;
 import model.*;
 import service.exception.ManagerSaveException;
 import java.io.*;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public FileBackedTasksManager(File fileForSave) {
         this.fileForSave = fileForSave;
+    }
+
+    public FileBackedTasksManager() {
     }
 
     public static void main(String[] args) {
@@ -352,13 +356,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     public void deleteSubTaskById(int subTaskId) {
         super.deleteSubTaskById(subTaskId);
         save();
-    }
-
-    public void setFileForSave(File fileForSave) {
-        this.fileForSave = fileForSave;
-    }
-
-    public void setFormatter(DateTimeFormatter formatter) {
-        this.formatter = formatter;
     }
 }
